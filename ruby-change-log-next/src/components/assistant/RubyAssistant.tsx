@@ -125,8 +125,9 @@ const RubyAssistant: React.FC = () => {
       const data = await res.json();
       if (data.text) {
         // コードブロックや太字をHTMLに変換
-        const formatted = data.text.replace(/```ruby\n([\s\S]*?)\n```/g, (m, code) => `<pre style='background:#f3f3f3;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0;'>${code.trim()}</pre>`)
-          .replace(/```([\s\S]*?)\n```/g, (m, code) => `<pre style='background:#f3f3f3;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0;'>${code.trim()}</pre>`)
+        const formatted = data.text
+          .replace(/```ruby\n([\s\S]*?)\n```/g, (m: string, code: string) => `<pre style='background:#f3f3f3;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0;'>${code.trim()}</pre>`)
+          .replace(/```([\s\S]*?)\n```/g, (m: string, code: string) => `<pre style='background:#f3f3f3;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0;'>${code.trim()}</pre>`)
           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
           .replace(/\n/g, '<br>');
         setOutput(formatted);

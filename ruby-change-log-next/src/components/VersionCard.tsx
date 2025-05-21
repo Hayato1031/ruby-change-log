@@ -50,6 +50,7 @@ const versionTitleStyle: React.CSSProperties = {
   lineHeight: 1.3,
   flexGrow: 1,
   minWidth: 0,
+  overflowWrap: "break-word", // Added for text overflow
 };
 const summaryStyle: React.CSSProperties = {
   fontStyle: "italic",
@@ -57,6 +58,7 @@ const summaryStyle: React.CSSProperties = {
   marginTop: 16,
   marginBottom: 32,
   fontSize: 18,
+  overflowWrap: "break-word", // Added for text overflow
 };
 const sectionHeadingStyle: React.CSSProperties = {
   fontSize: 24,
@@ -96,6 +98,8 @@ const strongStyle: React.CSSProperties = {
   color: "#991b1b",
   marginRight: 8,
   flexShrink: 0,
+  wordBreak: "break-word", // Added for text overflow
+  minWidth: 0, // Added for flex context safety
 };
 const paragraphStyle: React.CSSProperties = {
   wordBreak: "break-word",
@@ -103,25 +107,29 @@ const paragraphStyle: React.CSSProperties = {
 
 function useResponsiveCardStyle() {
   const [style, setStyle] = React.useState(cardBaseStyle);
-  const [titleStyle, setTitleStyle] = React.useState(versionTitleStyle);
-  const [numberStyle, setNumberStyle] = React.useState(versionNumberStyle);
+  const [vTitleStyle, setVTitleStyle] = React.useState(versionTitleStyle);
+  const [numStyle, setNumStyle] = React.useState(versionNumberStyle);
+  const [secHeadStyle, setSecHeadStyle] = React.useState(sectionHeadingStyle); // Added
+
   React.useEffect(() => {
     function handleResize() {
-      if (window.innerWidth < 600) {
+      if (window.innerWidth < 640) { // Updated breakpoint to 640px
         setStyle({ ...cardBaseStyle, width: 'calc(100% - 32px)', padding: 12, margin: '16px auto' });
-        setTitleStyle({ ...versionTitleStyle, fontSize: 18 });
-        setNumberStyle({ ...versionNumberStyle, fontSize: 36 });
+        setVTitleStyle({ ...versionTitleStyle, fontSize: 18 });
+        setNumStyle({ ...versionNumberStyle, fontSize: 36 });
+        setSecHeadStyle({ ...sectionHeadingStyle, fontSize: 16 }); // Added
       } else {
         setStyle(cardBaseStyle);
-        setTitleStyle(versionTitleStyle);
-        setNumberStyle(versionNumberStyle);
+        setVTitleStyle(versionTitleStyle);
+        setNumStyle(versionNumberStyle);
+        setSecHeadStyle(sectionHeadingStyle); // Added
       }
     }
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  return { style, titleStyle, numberStyle };
+  return { style, titleStyle: vTitleStyle, numberStyle: numStyle, sectionHeadingStyle: secHeadStyle }; // Modified return
 }
 
 const VersionCard: React.FC<VersionCardProps> = ({
@@ -133,7 +141,7 @@ const VersionCard: React.FC<VersionCardProps> = ({
   position,
   performance,
 }) => {
-  const { style: cardStyle, titleStyle, numberStyle } = useResponsiveCardStyle();
+  const { style: cardStyle, titleStyle, numberStyle, sectionHeadingStyle: currentSectionHeadingStyle } = useResponsiveCardStyle(); // Modified destructuring
   return (
     <section id={id} style={cardStyle}>
       <div style={headerStyle}>
@@ -141,7 +149,7 @@ const VersionCard: React.FC<VersionCardProps> = ({
         <h2 style={titleStyle}>{title}</h2>
       </div>
       <p style={summaryStyle}>{summary}</p>
-      <h3 style={sectionHeadingStyle}>主な機能追加と変更点</h3>
+      <h3 style={currentSectionHeadingStyle}>主な機能追加と変更点</h3> {/* Modified style */}
       <ul style={featureListStyle}>
         {features.map((f, i) => (
           <li key={i} style={featureItemStyle}>
@@ -153,9 +161,9 @@ const VersionCard: React.FC<VersionCardProps> = ({
           </li>
         ))}
       </ul>
-      <h3 style={sectionHeadingStyle}>Rubyの立ち位置と変化</h3>
+      <h3 style={currentSectionHeadingStyle}>Rubyの立ち位置と変化</h3> {/* Modified style */}
       <p style={paragraphStyle}>{position}</p>
-      <h3 style={sectionHeadingStyle}>パフォーマンス</h3>
+      <h3 style={currentSectionHeadingStyle}>パフォーマンス</h3> {/* Modified style */}
       <p style={paragraphStyle}>{performance}</p>
     </section>
   );

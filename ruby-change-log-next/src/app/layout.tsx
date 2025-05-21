@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   description: "Rubyの主要なバージョンアップを初心者向けにまとめたサイト",
 };
 
-const htmlStyle = { margin: 0, padding: 0, boxSizing: 'border-box' };
-const bodyStyle = { margin: 0, padding: 0, boxSizing: 'border-box' };
+const htmlStyle = { margin: 0, padding: 0 };
+const bodyStyle = { margin: 0, padding: 0 };
 
 export default function RootLayout({
   children,

@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubyの歴史と進化：初心者向けガイド</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            color: #334155; /* Dark slate gray text */
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .version-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Stronger shadow */
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: 1px solid #e2e8f0; /* Subtle border */
+        }
+        .version-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 35px -8px rgba(0, 0, 0, 0.15), 0 15px 15px -8px rgba(0, 0, 0, 0.06);
+        }
+        .version-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap; /* Allow items to wrap to next line */
+        }
+        .version-number {
+            font-size: 3rem; /* Larger version number */
+            font-weight: 700;
+            color: #dc2626; /* Red color */
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+            @media (max-width: 767px) {
+                margin-bottom: 0.5rem;
+                margin-right: 0;
+            }
+        }
+        .version-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600;
+            color: #1e293b; /* Darker slate */
+            line-height: 1.3;
+            flex-grow: 1; /* Allow title to take available space */
+            word-break: break-word; /* Break long words */
+            min-width: 0; /* Allow flex item to shrink below its content size */
+        }
+        .summary-text {
+            font-style: italic;
+            color: #475569; /* Slate gray */
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            font-size: 1.125rem; /* text-lg */
+            word-break: break-word; /* Break long words */
+        }
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 1.5rem;
+        }
+        .feature-list li {
+            background-color: #fef2f2; /* Light red background for features */
+            border-left: 4px solid #dc2626; /* Red left border */
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.75rem; /* Rounded corners for list items */
+            display: block; /* Change to block for vertical stacking of content */
+            font-size: 1rem;
+            word-break: break-word; /* Ensure text within list item breaks */
+        }
+        .feature-list li .feature-title-wrapper {
+            display: flex; /* Keep icon and strong on one line */
+            align-items: flex-start;
+            margin-bottom: 0.5rem; /* Space between title and description */
+            word-break: break-word;
+        }
+        .feature-list li strong {
+            color: #991b1b; /* Darker red for strong text */
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+            word-break: break-word; /* Ensure strong text breaks */
+        }
+        .feature-list li p {
+            word-break: break-word; /* Ensure description text breaks */
+        }
+        .icon {
+            margin-right: 0.75rem;
+            font-size: 1.5rem;
+            color: #dc2626; /* Red color */
+            flex-shrink: 0;
+        }
+        .section-heading {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #cbd5e1; /* Light gray border */
+            padding-bottom: 0.5rem;
+        }
+        .timeline-indicator {
+            position: relative;
+            height: 40px;
+            width: 2px;
+            background-color: #ef4444; /* Red color for timeline */
+            margin: 0 auto;
+            margin-bottom: 3rem;
+        }
+        .timeline-indicator::before,
+        .timeline-indicator::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444; /* Red color */
+            border-radius: 50%;
+        }
+        .timeline-indicator::before {
+            top: 0;
+        }
+        .timeline-indicator::after {
+            bottom: 0;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #dc2626; /* Red */
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* New Layout Styles */
+        .main-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px; /* Fixed width for desktop */
+            background-color: #880808; /* Darker Red background */
+            color: #e2e8f0;
+            padding: 2rem;
+            flex-shrink: 0; /* Prevent shrinking */
+            position: sticky; /* Make it sticky */
+            top: 0; /* Stick to the top */
+            height: 100vh; /* Full height */
+            overflow-y: auto; /* Scrollable if content overflows */
+            transition: transform 0.3s ease-in-out; /* For mobile slide-in */
+            z-index: 1000; /* Ensure sidebar is above main content on mobile */
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.3s ease;
+            color: #e2e8f0;
+        }
+
+        .sidebar a:hover {
+            background-color: #b91c1c; /* Darker red on hover */
+        }
+
+        .content-area {
+            flex-grow: 1; /* Take remaining space */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-toggle {
+            display: none; /* Hidden by default on desktop */
+            background-color: #dc2626; /* Red */
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            position: fixed; /* Fixed position for mobile button */
+            top: 1rem;
+            left: 1rem;
+            z-index: 1100; /* Above overlay */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 900; /* Below sidebar, above content */
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile specific styles */
+        @media (max-width: 767px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -280px; /* Hidden by default */
+                height: 100vh;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            }
+            .sidebar.open {
+                transform: translateX(280px); /* Slide in */
+            }
+            .menu-toggle {
+                display: block; /* Show hamburger menu on mobile */
+            }
+            .menu-toggle.hidden-on-open { /* Hide when sidebar is open */
+                display: none;
+            }
+            .header-content {
+                padding-left: 4rem; /* Adjust header content to not overlap with toggle button */
+            }
+        }
+
+        /* Output box specific styles */
+        #explanationOutput {
+            word-wrap: break-word; /* Ensure long words break */
+            overflow-wrap: break-word; /* Ensure long words break */
+            text-align: left; /* Align text to left within the box */
+        }
+        #explanationOutput pre {
+            white-space: pre-wrap; /* Preserve whitespace and wrap lines */
+            word-wrap: break-word; /* Ensure long words break within pre */
+            overflow-x: auto; /* Add horizontal scroll for very long lines if needed */
+            max-width: 100%; /* Ensure pre tag doesn't overflow its parent */
+        }
+
+        /* General paragraph styling within version-card for safety */
+        .version-card p {
+            word-break: break-word;
+        }
+
+        /* FAB (Floating Action Button) styles */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #dc2626; /* Red */
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            z-index: 1050; /* Above regular content, below modal */
+        }
+        .fab:hover {
+            background-color: #b91c1c; /* Darker red on hover */
+            transform: translateY(-2px);
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100; /* Above FAB */
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .modal-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%; /* Responsive width */
+            max-height: 90vh; /* Max height to allow scrolling */
+            overflow-y: auto; /* Enable scrolling for long content */
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .modal-overlay.open .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-layout">
+        <aside id="sidebar" class="sidebar">
+            <h2 class="text-3xl font-bold mb-8 text-center text-red-300">Ruby Versions</h2>
+            <nav>
+                <ul class="space-y-3">
+                    <li><a href="#ruby-1-0">Ruby 1.0</a></li>
+                    <li><a href="#ruby-1-8">Ruby 1.8</a></li>
+                    <li><a href="#ruby-1-9">Ruby 1.9</a></li>
+                    <li><a href="#ruby-2-0">Ruby 2.0</a></li>
+                    <li><a href="#ruby-2-1">Ruby 2.1</a></li>
+                    <li><a href="#ruby-2-2">Ruby 2.2</a></li>
+                    <li><a href="#ruby-2-3">Ruby 2.3</a></li>
+                    <li><a href="#ruby-2-4">Ruby 2.4</a></li>
+                    <li><a href="#ruby-2-5">Ruby 2.5</a></li>
+                    <li><a href="#ruby-2-6">Ruby 2.6</a></li>
+                    <li><a href="#ruby-2-7">Ruby 2.7</a></li>
+                    <li><a href="#ruby-3-0">Ruby 3.0</a></li>
+                    <li><a href="#ruby-3-1">Ruby 3.1</a></li>
+                    <li><a href="#ruby-3-2">Ruby 3.2</a></li>
+                    <li><a href="#ruby-3-3">Ruby 3.3</a></li>
+                    </ul>
+            </nav>
+        </aside>
+
+        <div class="content-area">
+            <button id="menuToggle" class="menu-toggle md:hidden">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <header class="bg-gradient-to-r from-red-600 to-rose-600 text-white py-8 shadow-lg">
+                <div class="container text-center header-content">
+                    <h1 class="text-5xl font-extrabold mb-4 tracking-tight">
+                        <span class="block">🚀 Rubyの歴史を紐解く</span>
+                        <span class="block text-3xl font-medium mt-2">進化の軌跡と未来への展望</span>
+                    </h1>
+                    <p class="text-xl font-light opacity-90">
+                        Rubyがどのように生まれ、どのように成長してきたのか、その魅力的な変遷を初心者にもわかりやすく解説します。
+                    </p>
+                </div>
+            </header>
+
+            <main class="container py-8">
+                <section id="ruby-1-0" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">1.0</div>
+                        <h2 class="version-title">Rubyの誕生：オブジェクト指向の哲学が息づく</h2>
+                    </div>
+                    <p class="summary-text">
+                        「プログラマの楽しさを追求し、すべてがオブジェクトであるという革新的な思想を携えて誕生した、Rubyの原点。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-gem"></i></span><strong>オブジェクト指向の徹底:</strong>
+                            </div>
+                            <p>数値や文字列を含む「すべて」がオブジェクトとして扱われ、一貫性のあるプログラミング体験を提供しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-box"></i></span><strong>ブロックとイテレータ:</strong>
+                            </div>
+                            <p>コードの再利用性と表現力を高める、Rubyの象徴的な機能であるブロックが導入されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-puzzle-piece"></i></span><strong>Mixin (モジュール):</strong>
+                            </div>
+                            <p>多重継承の複雑さを避けつつ、複数の機能をクラスに組み込むメカニズムが提供されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-lock"></i></span><strong>クロージャ:</strong>
+                            </div>
+                            <p>外側のスコープの変数を参照できるクロージャがサポートされ、柔軟なプログラミングが可能になりました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        Perl、Smalltalk、Eiffel、Ada、Lispなど、様々な言語の良い部分を取り入れつつ、独自の哲学を確立した新しいスクリプト言語として登場しました。まだニッチな存在でしたが、その後の成長の礎を築きました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        初期バージョンであり、パフォーマンスよりも言語の設計とプログラマの生産性に重点が置かれていました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-1-8" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">1.8</div>
+                        <h2 class="version-title">Railsと共に世界を席巻：Rubyの黄金時代を築いた安定版</h2>
+                    </div>
+                    <p class="summary-text">
+                        「Ruby on Railsの登場により、Web開発のデファクトスタンダードとして広く認知され、Rubyの知名度を一気に高めたバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-globe"></i></span><strong>Railsとの共鳴:</strong>
+                            </div>
+                            <p>Ruby on Railsがこのバージョンで広く使われるようになり、Rubyの普及に絶大な影響を与えました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-cog"></i></span><strong>安定性と成熟:</strong>
+                            </div>
+                            <p>長い期間にわたって安定版として利用され、多くのアプリケーションがこのバージョンで開発されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-rocket"></i></span><strong>パフォーマンス向上:</strong>
+                            </div>
+                            <p>1.6系と比較して、着実なパフォーマンス改善が図られました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        Ruby on Railsの爆発的な人気により、RubyはWebアプリケーション開発の最前線に躍り出ました。プログラマの生産性を最大化する言語として、その地位を確立しました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        1.6系から着実に改善され、実用的なWebアプリケーション開発に十分な性能を提供しました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-1-9" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">1.9</div>
+                        <h2 class="version-title">YARV導入で劇的な高速化：現代Rubyの基礎を築いた転換点</h2>
+                    </div>
+                    <p class="summary-text">
+                        「新しい仮想マシンYARVの導入により、実行速度が飛躍的に向上し、現代のRubyの基盤を築いた画期的なバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-bolt"></i></span><strong>YARV (Yet Another Ruby VM) の導入:</strong>
+                            </div>
+                            <p>従来のRubyインタプリタから、バイトコードベースの新しい仮想マシンに切り替わり、実行速度が大幅に向上しました。これにより、Rubyはより高速な言語へと進化しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-file-code"></i></span><strong>新しいHash構文:</strong>
+                            </div>
+                            <p><code>{ key: value }</code> のような、より簡潔なハッシュリテラル構文が導入されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-sort-numeric-down"></i></span><strong>デフォルトで順序付きハッシュ:</strong>
+                            </div>
+                            <p>ハッシュが挿入順序を保持するようになり、より予測可能な挙動を提供しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-thread"></i></span><strong>Fiberクラス:</strong>
+                            </div>
+                            <p>コルーチンを実現するためのFiberクラスが導入され、軽量な並行処理の記述が可能になりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-language"></i></span><strong>UTF-8のデフォルト化:</strong>
+                            </div>
+                            <p>文字列のデフォルトエンコーディングがUTF-8になり、国際化対応が容易になりました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        YARVの導入は、Rubyのパフォーマンスに対する長年の課題に終止符を打ち、大規模なアプリケーションや高負荷な環境での利用を可能にしました。一部の非互換性があったものの、Rubyの未来を決定づける重要なステップとなりました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        YARVの導入により、Ruby 1.8と比較して<strong>2倍から3倍</strong>の実行速度向上を達成しました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-2-0" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">2.0</div>
+                        <h2 class="version-title">より洗練された表現力：Rubyの成熟期への第一歩</h2>
+                    </div>
+                    <p class="summary-text">
+                        「キーワード引数やRefinementsなど、より洗練された表現力を手に入れ、言語としての成熟を深めたバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-key"></i></span><strong>キーワード引数:</strong>
+                            </div>
+                            <p>メソッドの引数に名前を付けて渡せるようになり、可読性と柔軟性が向上しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-link"></i></span><strong><code>Module#prepend</code>:</strong>
+                            </div>
+                            <p>メソッドの呼び出し順序を変更できる<code>prepend</code>が導入され、より強力なメソッドのオーバーライドが可能になりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-hourglass-half"></i></span><strong><code>Enumerable#lazy</code>:</strong>
+                            </div>
+                            <p>遅延評価をサポートする<code>lazy</code>メソッドが追加され、大規模なコレクション処理の効率が向上しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-palette"></i></span><strong>Refinements (実験的):</strong>
+                            </div>
+                            <p>特定のスコープ内でのみクラスを拡張できるRefinementsが実験的に導入され、モンキーパッチの副作用を局所化できるようになりました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        このバージョンは、言語の根本的な書き換えよりも、既存の機能を洗練させ、開発者の利便性を高めることに重点を置きました。より表現豊かで、安全なコードを書くための機能が追加され、Rubyはさらに成熟した言語へと進化しました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        1.9系からの大きなパフォーマンス向上はありませんでしたが、安定性と信頼性が向上しました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-2-1" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">2.1</div>
+                        <h2 class="version-title">RGenGC導入でGC性能が大幅向上：より快適な実行環境を提供</h2>
+                    </div>
+                    <p class="summary-text">
+                        「世代別ガベージコレクションRGenGCの導入により、メモリ管理が効率化され、アプリケーションの応答性が向上したバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-recycle"></i></span><strong>RGenGC (Generational Garbage Collection):</strong>
+                            </div>
+                            <p>世代別ガベージコレクションが導入され、GCの一時停止時間が大幅に短縮され、特に長期間稼働するアプリケーションのパフォーマンスが向上しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-calculator"></i></span><strong>Rational/Complexリテラル:</strong>
+                            </div>
+                            <p>有理数や複素数を直接記述できるリテラルが追加されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-tag"></i></span><strong><code>def</code>がメソッド名を返す:</strong>
+                            </div>
+                            <p><code>def</code>キーワードが定義したメソッド名を返すようになり、メタプログラミングの柔軟性が増しました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        GCの改善は、Rubyアプリケーションの応答性と安定性を高め、より大規模で要求の厳しいシステムでの利用を後押ししました。パフォーマンス最適化の継続的な取り組みが示されました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        RGenGCの導入により、GCによる一時停止時間が大幅に削減され、全体的なアプリケーションの応答性が向上しました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-2-2" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">2.2</div>
+                        <h2 class="version-title">GCのさらなる改善：メモリ効率と安定性を追求した堅実なバージョン</h2>
+                    </div>
+                    <p class="summary-text">
+                        「Incremental GCやSymbol GCの導入により、メモリ使用量とGC性能がさらに最適化され、安定性が向上したバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-chart-line"></i></span><strong>Incremental GC:</strong>
+                            </div>
+                            <p>GCの処理をより細かく分割することで、アプリケーションの一時停止時間をさらに短縮しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-font"></i></span><strong>Symbol GC:</strong>
+                            </div>
+                            <p>シンボルもGCの対象となり、メモリ使用量の削減に貢献しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-globe-americas"></i></span><strong>Unicode正規化:</strong>
+                            </div>
+                            <p>Unicode文字列の正規化機能が追加され、国際化対応が強化されました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        GCの継続的な改善は、Rubyがエンタープライズレベルのアプリケーションにも適した、より堅牢で信頼性の高い言語であることを示しました。安定性と効率性が重視されました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        GCのさらなる改善により、メモリ使用量が削減され、特にRailsアプリケーションなどで体感できるパフォーマンス向上が見られました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-2-3" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">2.3</div>
+                        <h2 class="version-title">安全なナビゲーション演算子：より堅牢で読みやすいコードを可能に</h2>
+                    </div>
+                    <p class="summary-text">
+                        「<code>&.</code> (ぼっち演算子) の導入により、nilチェックを簡潔に記述できるようになり、コードの安全性と可読性が向上したバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-question-circle"></i></span><strong><code>&.</code> (Safe Navigation Operator / Lonely Operator):</strong>
+                            </div>
+                            <p>メソッドチェーンの途中で<code>nil</code>が発生してもエラーにならない<code>&.</code>演算子が導入され、煩雑な<code>nil</code>チェックを減らすことができました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-search"></i></span><strong><code>Hash#dig</code> / <code>Array#dig</code>:</strong>
+                            </div>
+                            <p>ネストしたハッシュや配列から安全に値を取り出す<code>dig</code>メソッドが追加されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-lightbulb"></i></span><strong><code>did_you_mean</code> gemのバンドル:</strong>
+                            </div>
+                            <p>タイポなどによるエラー時に、正しいメソッド名を提案してくれる<code>did_you_mean</code>が標準でバンドルされ、開発体験が向上しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-snowflake"></i></span><strong>Frozen String Literals pragma (実験的):</strong>
+                            </div>
+                            <p>文字列リテラルをデフォルトでフリーズ（変更不可）にするオプションが実験的に導入され、メモリ効率とセキュリティの向上が期待されました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        開発者の生産性とコードの安全性を高めるための「かゆいところに手が届く」機能が多数追加されました。Rubyがより実用的で、エラーに強い言語へと進化していることを示しました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        全体的なパフォーマンスは2.2系とほぼ同等ですが、一部の内部最適化が施されました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-2-4" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">2.4</div>
+                        <h2 class="version-title">数値の扱いをシンプルに：内部構造の改善と利便性の追求</h2>
+                    </div>
+                    <p class="summary-text">
+                        「FixnumとBignumがIntegerに統合され、数値の扱いがよりシンプルかつ一貫性のあるものになったバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-infinity"></i></span><strong><code>Fixnum</code>と<code>Bignum</code>の<code>Integer</code>への統合:</strong>
+                            </div>
+                            <p>整数がその大きさに関わらず<code>Integer</code>クラスで統一されるようになり、数値の扱いがよりシンプルになりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-bug"></i></span><strong><code>Binding#irb</code>:</strong>
+                            </div>
+                            <p>デバッグ時に任意のコードの実行コンテキストを<code>irb</code>で開けるようになり、デバッグが容易になりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-spell-check"></i></span><strong><code>String#casecmp?</code>:</strong>
+                            </div>
+                            <p>大文字小文字を区別しない文字列比較メソッドが追加されました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        このバージョンは、言語の内部的なクリーンアップと、開発者の利便性を向上させるための小さな改善に焦点を当てました。Rubyが着実に進化し、より使いやすい言語へと洗練されていることを示しました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        ハッシュテーブルの改善など、内部的なパフォーマンス最適化が図られました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-2-5" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">2.5</div>
+                        <h2 class="version-title">テストカバレッジ機能の強化：より堅牢なソフトウェア開発を支援</h2>
+                    </div>
+                    <p class="summary-text">
+                        「コードカバレッジ計測機能の強化や、より柔軟な制御フローを可能にする機能が追加され、開発プロセスを支援したバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-vial"></i></span><strong>ブランチカバレッジとメソッドカバレッジ:</strong>
+                            </div>
+                            <p>テストのカバレッジ計測機能が強化され、より詳細なテスト状況を把握できるようになりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-arrow-right"></i></span><strong><code>yield_self</code> (後の<code>then</code>):</strong>
+                            </div>
+                            <p>レシーバ自身をブロックに渡す<code>yield_self</code>メソッドが導入され、メソッドチェーンをより読みやすく記述できるようになりました。（後に<code>then</code>に改名）</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-shield-alt"></i></span><strong>トップレベル定数探索の廃止:</strong>
+                            </div>
+                            <p>意図しない定数探索を防ぐため、トップレベルでの定数探索が廃止されました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        開発者がより高品質なソフトウェアを開発できるよう、テスト支援やコードの記述性を向上させる機能が追加されました。Rubyが単なる言語としてだけでなく、開発エコシステム全体を重視している姿勢が伺えます。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        GCの改善やメソッド呼び出しの最適化など、全体的にパフォーマンスが向上しました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-2-6" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">2.6</div>
+                        <h2 class="version-title">MJIT導入で、さらなる高速化への道を切り開いた挑戦的なバージョン</h2>
+                    </div>
+                    <p class="summary-text">
+                        「実験的なJITコンパイラMJITの導入により、実行速度のさらなる向上が期待され、Rubyのパフォーマンスの未来を切り開いたバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-tachometer-alt"></i></span><strong>JIT (Just-In-Time) コンパイラ (MJIT) の導入 (実験的):</strong>
+                            </div>
+                            <p>Rubyのコードをより高速なマシンコードに変換するJITコンパイラが実験的に導入され、大規模なアプリケーションでのパフォーマンス向上が期待されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-tree"></i></span><strong><code>RubyVM::AbstractSyntaxTree</code> (AST) の提供:</strong>
+                            </div>
+                            <p>Rubyコードの抽象構文木にアクセスできるようになり、静的解析ツールなどの開発が容易になりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-filter"></i></span><strong><code>Enumerable#filter_map</code>:</strong>
+                            </div>
+                            <p>フィルタリングとマッピングを同時に行う便利なメソッドが追加されました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        JITの導入は、Rubyがパフォーマンスの限界をさらに押し広げようとする強い意志を示しました。これは、Rubyがより幅広い用途、特に計算負荷の高い処理にも対応できる可能性を秘めていることを意味します。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        MJITは特定のワークロードでパフォーマンス向上をもたらしましたが、まだ実験段階であり、今後のバージョンでの本格的な改善が期待されました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-2-7" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">2.7</div>
+                        <h2 class="version-title">Ruby 3への橋渡し：実験的機能が満載のプレビュー版</h2>
+                    </div>
+                    <p class="summary-text">
+                        「パターンマッチングやnumbered parametersなど、Ruby 3で本格導入される主要な機能を実験的に先行導入し、未来のRubyの姿を示したバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-bullseye"></i></span><strong>パターンマッチング (実験的):</strong>
+                            </div>
+                            <p>構造化されたデータを簡潔に分解・処理できるパターンマッチングが実験的に導入されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-sort-numeric-up"></i></span><strong>Numbered parameters (実験的):</strong>
+                            </div>
+                            <p>ブロック引数を<code>_1</code>, <code>_2</code>のように自動的に参照できる機能が実験的に追加され、短いブロックの記述がより簡潔になりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-exchange-alt"></i></span><strong>キーワード引数と位置引数の分離:</strong>
+                            </div>
+                            <p>曖昧だったキーワード引数と位置引数の挙動が明確に分離され、将来のRuby 3への移行をスムーズにするための変更が行われました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-minus-circle"></i></span><strong><code>Hash#except</code>:</strong>
+                            </div>
+                            <p>特定のキーを除外した新しいハッシュを生成する<code>except</code>メソッドが追加されました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        Ruby 3.0への大きな変更に備えるための「プレビュー」的な役割を担いました。これにより、開発者は新しい機能を早期に試すことができ、コミュニティ全体でフィードバックを共有する機会が生まれました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        MJITの改善が続けられ、全体的なパフォーマンスは2.6系から着実に向上しました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-3-0" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">3.0</div>
+                        <h2 class="version-title">Ruby 3x3の目標達成：並行処理、型安全性、そして新時代へ突入</h2>
+                    </div>
+                    <p class="summary-text">
+                        「「Ruby 3x3」の目標達成、Ractorによる真の並行処理、型安全性の強化など、Rubyの未来を大きく変える画期的なバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-bolt"></i></span><strong>Ruby 3x3 Performance Goal達成:</strong>
+                            </div>
+                            <p>Ruby 2.0と比較して<strong>3倍</strong>のパフォーマンス向上を達成するという目標が達成されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-handshake"></i></span><strong>Ractor (Actor-model concurrency):</strong>
+                            </div>
+                            <p>真の並行処理を可能にするアクターモデルベースのRactorが導入され、スレッドセーフな並列プログラムを可能にしました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-clock"></i></span><strong>Fiber Scheduler:</strong>
+                            </div>
+                            <p>ノンブロッキングI/Oをより効率的に扱うためのFiber Schedulerが導入されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-crosshairs"></i></span><strong>パターンマッチング (安定版):</strong>
+                            </div>
+                            <p>2.7で実験的だったパターンマッチングが安定機能として導入されました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-pen-nib"></i></span><strong>型チェック (RBS, TypeProf):</strong>
+                            </div>
+                            <p>静的型解析をサポートするRBS言語と、型推論ツールTypeProfが導入され、大規模開発での型安全性が向上しました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        Ruby 3.0は、パフォーマンス、並行処理、型安全性の3つの柱でRubyを大幅に進化させました。これにより、Rubyはより大規模で複雑なシステム、特に並行処理が求められる分野での利用に適した、現代的な言語としての地位を確立しました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        Ruby 2.0と比較して<strong>3倍</strong>のパフォーマンス向上を達成しました。これは主にMJITの改善と、言語内部の最適化によるものです。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-3-1" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">3.1</div>
+                        <h2 class="version-title">YJIT導入でさらなる高速化：開発体験を向上</h2>
+                    </div>
+                    <p class="summary-text">
+                        「新しいJITコンパイラYJITの導入により、Rubyの実行速度がさらに向上し、開発者のデバッグ体験も改善されたバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-rocket"></i></span><strong>YJIT (Yet Another JIT) の導入:</strong>
+                            </div>
+                            <p>MJITとは異なるアプローチの新しいJITコンパイラYJITが導入され、特にRailsのような大規模アプリケーションでの起動時間と実行速度が向上しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-bug"></i></span><strong>Debuggerのバンドル:</strong>
+                            </div>
+                            <p>新しいデバッガが標準でバンドルされ、より快適なデバッグ体験を提供します。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-minus"></i></span><strong><code>Hash#except</code> with block:</strong>
+                            </div>
+                            <p><code>Hash#except</code>がブロックを受け取るようになり、より柔軟なキーの除外が可能になりました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        Ruby 3.0で達成したパフォーマンス目標をさらに押し進め、JIT技術の進化に力を入れていることを示しました。また、開発者の日々の作業を支援するツール（デバッガ）の強化も行われました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        YJITの導入により、特にRailsアプリケーションの起動時間やリクエスト処理速度において、MJITよりも優れたパフォーマンスを発揮するようになりました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-3-2" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">3.2</div>
+                        <h2 class="version-title">WebAssembly対応で新たな可能性を広げ、開発支援機能も充実</h2>
+                    </div>
+                    <p class="summary-text">
+                        「WebAssembly System Interface (WASI) のサポートにより、RubyがWebAssembly環境で動作する新たな可能性を広げたバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-globe-africa"></i></span><strong>WASI (WebAssembly System Interface) サポート:</strong>
+                            </div>
+                            <p>RubyがWebAssembly環境で動作するためのサポートが追加され、ブラウザやWebAssemblyランタイム上でのRubyの利用が視野に入りました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-pencil-alt"></i></span><strong><code>SyntaxSuggest</code>のバンドル:</strong>
+                            </div>
+                            <p>シンタックスエラーの修正を提案する<code>SyntaxSuggest</code>が標準でバンドルされ、エラー解決が容易になりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-underline"></i></span><strong>匿名<code>_</code>をrest引数に:</strong>
+                            </div>
+                            <p>メソッド定義で匿名<code>_</code>をrest引数として使用できるようになり、不要な引数を無視する際に便利になりました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-database"></i></span><strong><code>Data</code>クラス:</strong>
+                            </div>
+                            <p>シンプルな値オブジェクトを定義するための<code>Data</code>クラスが追加されました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        WebAssemblyへの対応は、Rubyの適用範囲をWebフロントエンドやサーバーレス環境など、新たな領域へと拡大する可能性を示しました。同時に、開発者の生産性を高めるための細やかな改善も継続されました。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        YJITのさらなる改善や、その他の内部的な最適化により、着実なパフォーマンス向上が見られました。
+                    </p>
+                </section>
+                <div class="timeline-indicator"></div>
+
+                <section id="ruby-3-3" class="version-card">
+                    <div class="version-header">
+                        <div class="version-number">3.3</div>
+                        <h2 class="version-title">新しいパーサーPrismの導入：未来のRubyを支える基盤を強化</h2>
+                    </div>
+                    <p class="summary-text">
+                        「新しいパーサーPrismの導入により、Rubyの内部構造が刷新され、将来の言語進化とツール開発の基盤を強化したバージョン。」
+                    </p>
+                    <h3 class="section-heading">主な機能追加と変更点</h3>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-cogs"></i></span><strong>Prismパーサーの導入:</strong>
+                            </div>
+                            <p>従来のRipperパーサーに代わる新しいCベースのパーサーPrismがデフォルトで導入されました。これにより、Rubyの解析がより高速かつ堅牢になり、今後の言語機能追加やツール開発が容易になります。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-tools"></i></span><strong>Lramaパーサージェネレータ:</strong>
+                            </div>
+                            <p>Yacc互換の新しいパーサージェネレータLramaが導入され、Rubyの構文解析のメンテナンス性が向上しました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-rocket"></i></span><strong>YJITのさらなる改善:</strong>
+                            </div>
+                            <p>YJITがさらに高速化され、メモリ使用量も削減されました。特にRailsのような大規模なアプリケーションで顕著なパフォーマンス向上が見られました。</p>
+                        </li>
+                        <li>
+                            <div class="feature-title-wrapper">
+                                <span class="icon"><i class="fas fa-magic"></i></span><strong>IRBの改善:</strong>
+                            </div>
+                            <p>対話型RubyシェルIRBが大幅に改善され、より使いやすくなりました。</p>
+                        </li>
+                    </ul>
+                    <h3 class="section-heading">Rubyの立ち位置と変化</h3>
+                    <p>
+                        このバージョンは、目に見える新機能よりも、Rubyの内部的な基盤を強化することに重点を置きました。新しいパーサーの導入は、Rubyの長期的な安定性、進化の速度、そしてエコシステム全体の健全性を保証するための重要な投資です。
+                    </p>
+                    <h3 class="section-heading">パフォーマンス</h3>
+                    <p>
+                        YJITの継続的な改善により、Ruby 3.2と比較してさらなるパフォーマンス向上を達成しました。特にRailsアプリケーションで約15%の高速化が報告されています。
+                    </p>
+                </section>
+            </main>
+
+            <footer class="bg-gray-800 text-white py-6 text-center shadow-inner mt-8">
+                <div class="container">
+                    <p>&copy; 2025 Rubyの歴史と進化. All rights reserved.</p>
+                    <p class="text-sm mt-2 opacity-80">このサイトはRubyの主要なバージョンアップを初心者向けにまとめたものです。</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <div id="sidebarOverlay" class="overlay"></div>
+
+    <button id="openAssistantFab" class="fab">
+        <i class="fas fa-lightbulb"></i>
+    </button>
+
+    <div id="assistantModalOverlay" class="modal-overlay">
+        <div id="assistantModalContent" class="modal-content">
+            <button id="closeAssistantModal" class="modal-close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="text-3xl font-bold text-center text-red-700 mb-6">
+                <i class="fas fa-question-circle mr-2"></i>Ruby用語解説アシスタント
+            </h2>
+            <p class="text-center text-lg text-gray-600 mb-8">
+                知りたいRubyの用語を入力してください。AIが初心者にも分かりやすく解説します！
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
+                <input
+                    type="text"
+                    id="rubyTermInput"
+                    placeholder="例: オブジェクト指向、ブロック、Ractor"
+                    class="flex-grow p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-gray-700 text-base"
+                >
+                <button
+                    id="explainTermButton"
+                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center"
+                >
+                    <span class="mr-2"><i class="fas fa-comment-dots"></i></span>解説！
+                </button>
+            </div>
+            <div id="loadingSpinner" class="loading-spinner mx-auto mb-4"></div>
+            <div
+                id="explanationOutput"
+                class="bg-red-50 border border-red-200 text-red-800 p-6 rounded-xl shadow-inner min-h-[100px] flex items-center justify-start text-left text-lg"
+            >
+                ここに解説が表示されます。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rubyTermInput = document.getElementById('rubyTermInput');
+            const explainTermButton = document.getElementById('explainTermButton');
+            const explanationOutput = document.getElementById('explanationOutput');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            const openAssistantFab = document.getElementById('openAssistantFab');
+            const assistantModalOverlay = document.getElementById('assistantModalOverlay');
+            const assistantModalContent = document.getElementById('assistantModalContent');
+            const closeAssistantModal = document.getElementById('closeAssistantModal');
+
+            // --- Sidebar Toggle Logic ---
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.add('open');
+                sidebarOverlay.classList.add('active');
+                menuToggle.classList.add('hidden-on-open'); // Hide hamburger button
+            });
+
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('active');
+                menuToggle.classList.remove('hidden-on-open'); // Show hamburger button
+            });
+
+            // Close sidebar when a link is clicked (for smooth navigation on mobile)
+            sidebar.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 768) { // Only on mobile
+                        sidebar.classList.remove('open');
+                        sidebarOverlay.classList.remove('active');
+                        menuToggle.classList.remove('hidden-on-open'); // Show hamburger button
+                    }
+                });
+            });
+
+            // --- FAB and Modal Logic ---
+            openAssistantFab.addEventListener('click', () => {
+                assistantModalOverlay.classList.add('open');
+            });
+
+            closeAssistantModal.addEventListener('click', () => {
+                assistantModalOverlay.classList.remove('open');
+            });
+
+            assistantModalOverlay.addEventListener('click', (event) => {
+                // Close modal only if clicked directly on the overlay, not on the content
+                if (event.target === assistantModalOverlay) {
+                    assistantModalOverlay.classList.remove('open');
+                }
+            });
+
+            // --- AI Assistant Logic ---
+            explainTermButton.addEventListener('click', async () => {
+                const term = rubyTermInput.value.trim();
+                if (!term) {
+                    explanationOutput.innerHTML = '<p class="text-red-500">解説してほしい用語を入力してください。</p>';
+                    return;
+                }
+
+                explanationOutput.innerHTML = ''; // Clear previous content
+                loadingSpinner.style.display = 'block'; // Show spinner
+
+                const prompt = `Rubyの初心者向けに、以下の用語を分かりやすく解説してください。可能であれば、簡単なコード例も添えてください。用語: ${term}`;
+
+                try {
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        // Replace markdown code blocks with pre-formatted text for display
+                        const formattedText = text.replace(/```ruby\n([\s\S]*?)\n```/g, (match, code) => {
+                            return `<pre class="bg-gray-100 p-3 rounded-md text-sm overflow-x-auto my-2">${code.trim()}</pre>`;
+                        }).replace(/```([\s\S]*?)\n```/g, (match, code) => {
+                            return `<pre class="bg-gray-100 p-3 rounded-md text-sm overflow-x-auto my-2">${code.trim()}</pre>`;
+                        }).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text
+                          .replace(/\n/g, '<br>'); // Newlines to <br> for HTML display
+
+                        explanationOutput.innerHTML = formattedText;
+                    } else {
+                        explanationOutput.innerHTML = '<p class="text-red-500">用語の解説を取得できませんでした。別の用語でお試しください。</p>';
+                        console.error('Unexpected API response structure:', result);
+                    }
+                } catch (error) {
+                    explanationOutput.innerHTML = '<p class="text-red-500">エラーが発生しました。インターネット接続を確認し、再度お試しください。</p>';
+                    console.error('Error fetching explanation:', error);
+                } finally {
+                    loadingSpinner.style.display = 'none'; // Hide spinner
+                }
+            });
+        });
+    </script>
+</body>
+</html>

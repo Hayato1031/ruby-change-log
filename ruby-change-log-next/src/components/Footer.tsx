@@ -14,11 +14,13 @@ const containerStyle: React.CSSProperties = {
 };
 const copyrightStyle: React.CSSProperties = {
   margin: 0,
+  overflowWrap: "break-word", // Added for text overflow
 };
 const descStyle: React.CSSProperties = {
   fontSize: 14,
   marginTop: 8,
   opacity: 0.8,
+  overflowWrap: "break-word", // Added for text overflow
 };
 
 const Footer: React.FC = () => (

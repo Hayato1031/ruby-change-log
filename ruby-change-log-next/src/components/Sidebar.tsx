@@ -87,7 +87,7 @@ const hamburgerStyle: React.CSSProperties = {
   transition: "background 0.2s",
 };
 const titleStyle: React.CSSProperties = {
-  fontSize: 22,
+  fontSize: 20, // Reduced from 22px
   fontWeight: 700,
   marginBottom: 20,
   textAlign: "center",
@@ -109,6 +109,7 @@ const linkStyle: React.CSSProperties = {
   textDecoration: "none",
   fontSize: 15,
   transition: "background 0.3s",
+  overflowWrap: "break-word", // Added for text overflow
 };
 
 const Sidebar: React.FC = () => {
@@ -117,7 +118,7 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     function handleResize() {
-      setIsMobile(window.innerWidth < 600);
+      setIsMobile(window.innerWidth < 640); // Updated breakpoint to 640px
     }
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -132,9 +133,9 @@ const Sidebar: React.FC = () => {
   // PC時は常時表示、モバイル時はハンバーガー＋スライドイン
   return (
     <>
-      {isMobile && !open && (
-        <button style={hamburgerStyle} onClick={() => setOpen(true)} aria-label="メニューを開く">
-          <i className="fas fa-bars" />
+      {isMobile && (
+        <button style={hamburgerStyle} onClick={() => setOpen(!open)} aria-label={open ? "メニューを閉じる" : "メニューを開く"}>
+          <i className={`fas ${open ? "fa-times" : "fa-bars"}`} />
         </button>
       )}
       {isMobile ? (

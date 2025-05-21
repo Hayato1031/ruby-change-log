@@ -125,7 +125,7 @@ const RubyAssistant: React.FC = () => {
       const data = await res.json();
       if (data.text) {
         // コードブロックや太字をHTMLに変換
-        let formatted = data.text.replace(/```ruby\n([\s\S]*?)\n```/g, (m, code) => `<pre style='background:#f3f3f3;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0;'>${code.trim()}</pre>`)
+        const formatted = data.text.replace(/```ruby\n([\s\S]*?)\n```/g, (m, code) => `<pre style='background:#f3f3f3;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0;'>${code.trim()}</pre>`)
           .replace(/```([\s\S]*?)\n```/g, (m, code) => `<pre style='background:#f3f3f3;padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0;'>${code.trim()}</pre>`)
           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
           .replace(/\n/g, '<br>');
@@ -133,7 +133,7 @@ const RubyAssistant: React.FC = () => {
       } else {
         setOutput(data.error || '用語の解説を取得できませんでした。');
       }
-    } catch (e) {
+    } catch {
       setOutput('エラーが発生しました。インターネット接続を確認し、再度お試しください。');
     } finally {
       setLoading(false);

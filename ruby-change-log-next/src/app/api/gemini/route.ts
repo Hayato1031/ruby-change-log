@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     } else {
       return NextResponse.json({ error: '用語の解説を取得できませんでした。' }, { status: 500 });
     }
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Gemini APIリクエストでエラーが発生しました。' }, { status: 500 });
   }
 } 

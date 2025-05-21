@@ -245,15 +245,26 @@
 
         /* Output box specific styles */
         #explanationOutput {
-            word-wrap: break-word; /* Ensure long words break */
-            overflow-wrap: break-word; /* Ensure long words break */
-            text-align: left; /* Align text to left within the box */
+            display: block !important;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            min-height: 100px;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-align: left;
         }
         #explanationOutput pre {
-            white-space: pre-wrap; /* Preserve whitespace and wrap lines */
-            word-wrap: break-word; /* Ensure long words break within pre */
-            overflow-x: auto; /* Add horizontal scroll for very long lines if needed */
-            max-width: 100%; /* Ensure pre tag doesn't overflow its parent */
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            overflow-x: auto;
+            box-sizing: border-box;
+            margin: 1em 0;
         }
 
         /* General paragraph styling within version-card for safety */
@@ -1089,7 +1100,7 @@
             <div id="loadingSpinner" class="loading-spinner mx-auto mb-4"></div>
             <div
                 id="explanationOutput"
-                class="bg-red-50 border border-red-200 text-red-800 p-6 rounded-xl shadow-inner min-h-[100px] flex items-center justify-start text-left text-lg"
+                class="bg-red-50 border border-red-200 text-red-800 p-6 rounded-xl shadow-inner min-h-[100px] text-left text-lg block"
             >
                 ここに解説が表示されます。
             </div>
@@ -1169,7 +1180,7 @@
                     let chatHistory = [];
                     chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                     const payload = { contents: chatHistory };
-                    const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+                    const apiKey = "AIzaSyBBA0irJuNOSrj7t5g3fv7ONAvjlqJYERU"; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {

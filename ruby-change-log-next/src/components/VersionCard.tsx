@@ -1,5 +1,5 @@
 'use client'
-import React, { useLayoutEffect } from "react";
+import React from "react";
 
 export type Feature = {
   icon: string; // FontAwesomeクラス

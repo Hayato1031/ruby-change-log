@@ -8,6 +8,31 @@ const inter = Inter({ subsets: ['latin'], weight: ["300", "400", "600", "700"] }
 export const metadata: Metadata = {
   title: "Rubyの歴史と進化：初心者向けガイド",
   description: "Rubyの主要なバージョンアップを初心者向けにまとめたサイト",
+  openGraph: {
+    title: "Rubyの歴史と進化：初心者向けガイド",
+    description: "Rubyの主要なバージョンアップを初心者向けにまとめたサイト",
+    url: "https://ruby-history.modulate.jp/",
+    siteName: "Rubyの歴史と進化",
+    images: [
+      {
+        url: "/img/ruby-history.png",
+        width: 1200,
+        height: 630,
+        alt: "Rubyの歴史 サムネイル画像",
+      },
+    ],
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rubyの歴史と進化：初心者向けガイド",
+    description: "Rubyの主要なバージョンアップを初心者向けにまとめたサイト",
+    images: [
+      "/img/ruby-history.png"
+    ],
+    site: "@lit_myura",
+  },
 };
 
 const htmlStyle = { margin: 0, padding: 0 };

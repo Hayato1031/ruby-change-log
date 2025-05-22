@@ -113,7 +113,7 @@ const linkStyle: React.CSSProperties = {
 };
 
 const Sidebar: React.FC = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -124,6 +124,9 @@ const Sidebar: React.FC = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // 判定が終わるまで何も描画しない（SSR/初回マウント直後のチラつき防止）
+  if (isMobile === null) return null;
 
   // メニュークリック時に自動で閉じる
   const handleLinkClick = () => {
